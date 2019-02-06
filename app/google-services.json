@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "271726081205",
+    "firebase_url": "https://dailyplanner-88f82.firebaseio.com",
+    "project_id": "dailyplanner-88f82",
+    "storage_bucket": "dailyplanner-88f82.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:271726081205:android:e8091a5bed5e74c6",
+        "android_client_info": {
+          "package_name": "com.example.xinruigao.dailyplanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "271726081205-gsf93o6gdrftq5kpf5ih20q311ghv4u1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.xinruigao.dailyplanner",
+            "certificate_hash": "f934c2ea09ab7e26a78157a4ae01b20819dfc282"
+          }
+        },
+        {
+          "client_id": "271726081205-p0vp7bbn9n3ecub7bdi6ro8ih21jis7o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTI4fMmtS4H1xP16fIQm-abwy51iMVOjE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "271726081205-p0vp7bbn9n3ecub7bdi6ro8ih21jis7o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
