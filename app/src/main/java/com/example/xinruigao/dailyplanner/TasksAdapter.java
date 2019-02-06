@@ -9,54 +9,65 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class DateAdapter extends RecyclerView.Adapter<DateAdapter.DateViewHolder> {
-
+public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TasksViewHolder>{
     private Context mContext;
-    private List<String> mAllDates;
+    private List<Upload> mUploads;
 
     private OnItemClickListener mListener;
 
-    public DateAdapter(Context context, List<String> allDates) {
-        mContext = context;
-        mAllDates = allDates;
+    public TasksAdapter(Context mContext, List<Upload> mUploads) {
+        this.mContext = mContext;
+        this.mUploads = mUploads;
     }
 
     @NonNull
     @Override
-    public DateViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.all_dates, parent, false);
-        return new DateViewHolder(v);
+    public TasksViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+        View v = LayoutInflater.from(mContext).inflate(R.layout.all_tasks, parent, false);
+        return new TasksViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DateViewHolder dateViewHolder, int position) {
-        String currentDatePackage = mAllDates.get(position);
-        dateViewHolder.textViewDatePackage.setText(currentDatePackage);
-
+    public void onBindViewHolder(@NonNull TasksViewHolder holder, int position) {
+        Upload uploadCurrent = mUploads.get(position);
+        holder.textViewTaskTitle.setText(uploadCurrent.getTitle());
+        holder.textViewTaskDescription.setText(uploadCurrent.getDescription());
+        Picasso.get()
+                .load(uploadCurrent.getImageUrl())
+                .placeholder(R.drawable.planner_app_icon)
+                .fit()
+                .centerCrop()
+                .into(holder.imageViewTaskUploaded);
     }
 
     @Override
     public int getItemCount() {
-        return mAllDates.size();
+        return mUploads.size();
     }
 
-    public class DateViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
-            View.OnCreateContextMenuListener,MenuItem.OnMenuItemClickListener {
+    public class TasksViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+            View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener {
 
-        public TextView textViewDatePackage;
+        public TextView textViewTaskTitle, textViewTaskDescription;
+        public ImageView imageViewTaskUploaded;
 
-        public DateViewHolder(@NonNull View itemView) {
+        public TasksViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            textViewDatePackage = itemView.findViewById(R.id.text_view_date_package);
+            textViewTaskTitle = itemView.findViewById(R.id.text_view_task_title);
+            textViewTaskDescription = itemView.findViewById(R.id.text_view_task_description);
+            imageViewTaskUploaded = itemView.findViewById(R.id.image_view_uploaded_task);
 
             itemView.setOnClickListener(this);
+            //long click
             itemView.setOnCreateContextMenuListener(this);
-
         }
 
         @Override
@@ -68,8 +79,8 @@ public class DateAdapter extends RecyclerView.Adapter<DateAdapter.DateViewHolder
                 }
             }
         }
+
         @Override
-        //long click
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             menu.setHeaderTitle("Select Action");
             MenuItem doWhatever = menu.add(Menu.NONE, 1, 1, "Do Whatever");
@@ -99,7 +110,7 @@ public class DateAdapter extends RecyclerView.Adapter<DateAdapter.DateViewHolder
         }
     }
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         void onItemClick(int position);
 
         void onWhateverClick(int position);
@@ -107,9 +118,7 @@ public class DateAdapter extends RecyclerView.Adapter<DateAdapter.DateViewHolder
         void onDeleteClick(int position);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener){
+    public void setOnItemClickListener(OnItemClickListener listener) {
         mListener = listener;
     }
-
-
 }

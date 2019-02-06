@@ -1,9 +1,12 @@
 package com.example.xinruigao.dailyplanner;
 
+import com.google.firebase.database.Exclude;
+
 public class Upload {
     private String mTitle;
     private String mDescription;
     private String mImageUrl;
+    private String mKey;
 
     public Upload() {
         //empty constructor
@@ -42,5 +45,15 @@ public class Upload {
 
     public void setImageUrl(String imageUrl) {
         mImageUrl = imageUrl;
+    }
+
+    //dont need in firebase as name of note is key already, only need it in upload items arraylist
+    @Exclude
+    public String getKkey() {
+        return mKey;
+    }
+    @Exclude
+    public void setKey(String key) {
+        mKey = key;
     }
 }

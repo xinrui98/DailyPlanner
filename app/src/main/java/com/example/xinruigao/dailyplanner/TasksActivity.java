@@ -103,12 +103,16 @@ public class TasksActivity extends AppCompatActivity {
 
         //individual date (child) database and storage ref package
         mDatabaseDateRef = mDatabaseRef.getRef().child(formattedDate);
-        mStorageDateRef = mStorageRef.child(formattedDate);
+//        mStorageDateRef = mStorageRef.child(formattedDate);
 
         mButtonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadFile();
+                if (mUploadTask != null && mUploadTask.isInProgress()) {
+                    Toast.makeText(TasksActivity.this, "Upload in progress", Toast.LENGTH_SHORT).show();
+                } else {
+                    uploadFile();
+                }
             }
         });
 
@@ -225,7 +229,7 @@ public class TasksActivity extends AppCompatActivity {
         } else if (requestCode == CAMERA_CODE && resultCode == RESULT_OK) {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
 //            mImageViewTask.setImageBitmap(thumbnail);
-            mImageUri = getImageUri(getApplicationContext(),thumbnail);
+            mImageUri = getImageUri(getApplicationContext(), thumbnail);
             Picasso.get().load(mImageUri).into(mImageViewTask);
             Toast.makeText(TasksActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
         }
@@ -233,7 +237,7 @@ public class TasksActivity extends AppCompatActivity {
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
-        Bitmap OutImage = Bitmap.createScaledBitmap(inImage, 1000, 1000,true);
+        Bitmap OutImage = Bitmap.createScaledBitmap(inImage, 1000, 1000, true);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), OutImage, "Title", null);
         return Uri.parse(path);
     }
@@ -247,7 +251,7 @@ public class TasksActivity extends AppCompatActivity {
 
     private void uploadFile() {
         if (mImageUri != null) {
-            StorageReference fileReference = mStorageDateRef.child(System.currentTimeMillis()
+            StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
                     + "." + getFileExtension(mImageUri));
 
             mUploadTask = fileReference.putFile(mImageUri)
