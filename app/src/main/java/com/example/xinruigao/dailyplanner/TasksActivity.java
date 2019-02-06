@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -77,7 +79,6 @@ public class TasksActivity extends AppCompatActivity {
 
     private List<Upload> mUploads;
     private List<DatabaseReference> mDatabaseRefList;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +157,9 @@ public class TasksActivity extends AppCompatActivity {
 
     private void takePhotoFromCamera() {
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+
         startActivityForResult(intent, CAMERA_CODE);
+
 
         //Asking for user permission for writing external storage
         // Here, thisActivity is the current activity
@@ -227,13 +230,12 @@ public class TasksActivity extends AppCompatActivity {
             }
 
         } else if (requestCode == CAMERA_CODE && resultCode == RESULT_OK) {
+
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-//            mImageViewTask.setImageBitmap(thumbnail);
             mImageUri = getImageUri(getApplicationContext(), thumbnail);
             Picasso.get().load(mImageUri).into(mImageViewTask);
             Toast.makeText(TasksActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
