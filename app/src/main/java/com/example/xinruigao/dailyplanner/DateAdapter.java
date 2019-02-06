@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class DateAdapter extends RecyclerView.Adapter<DateAdapter.DateViewHolder> {
@@ -15,9 +16,9 @@ public class DateAdapter extends RecyclerView.Adapter<DateAdapter.DateViewHolder
     private Context mContext;
     private List<String> mAllDates;
 
-    public DateAdapter(Context mContext, List<String> mAllDates) {
-        this.mContext = mContext;
-        this.mAllDates = mAllDates;
+    public DateAdapter(Context context, List<String> allDates) {
+        mContext = context;
+        mAllDates = allDates;
     }
 
     @NonNull
@@ -28,14 +29,15 @@ public class DateAdapter extends RecyclerView.Adapter<DateAdapter.DateViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DateViewHolder dateViewHolder, int postion) {
-        String dateCurrent = mAllDates.get(postion);
-        dateViewHolder.textViewDatePackage.setText(dateCurrent);
+    public void onBindViewHolder(@NonNull DateViewHolder dateViewHolder, int position) {
+        String currentDatePackage = mAllDates.get(position);
+        dateViewHolder.textViewDatePackage.setText(currentDatePackage);
+
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mAllDates.size();
     }
 
     public class DateViewHolder extends RecyclerView.ViewHolder{
