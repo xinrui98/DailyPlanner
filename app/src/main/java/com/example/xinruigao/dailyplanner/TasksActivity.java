@@ -78,6 +78,8 @@ public class TasksActivity extends AppCompatActivity {
 
     private StorageTask mUploadTask;
 
+    private Uri mCameraUri;
+
     private String mImageFilePath = "";
 
     @Override
@@ -157,7 +159,6 @@ public class TasksActivity extends AppCompatActivity {
 
     private void takePhotoFromCamera() {
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        ///////////////////////////////////////////
         if (intent.resolveActivity(getPackageManager()) != null) {
 
             File photoFile = null;
@@ -167,9 +168,8 @@ public class TasksActivity extends AppCompatActivity {
                 e.printStackTrace();
                 return;
             }
-            Uri photoUri = FileProvider.getUriForFile(this, getPackageName() + ".provider", photoFile);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-            //////////////////////////////////
+            mCameraUri = FileProvider.getUriForFile(this, getPackageName() + ".provider", photoFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraUri);
 
             startActivityForResult(intent, CAMERA_CODE);
         }
@@ -243,14 +243,14 @@ public class TasksActivity extends AppCompatActivity {
 
             }
 
-        } else if (requestCode == CAMERA_CODE && resultCode == RESULT_OK) {
-
-            mImageUri = Uri.parse(mImageFilePath);
-            System.out.println(mImageUri);
-            mImageViewTask.setImageURI(Uri.parse(mImageFilePath));
-            Toast.makeText(TasksActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-            galleryAddPic();
-        } else if (resultCode == RESULT_CANCELED) {
+        } else if (requestCode == CAMERA_CODE) {
+            if (resultCode == RESULT_OK) {
+                mImageUri = mCameraUri;
+                mImageViewTask.setImageURI(Uri.parse(mImageFilePath));
+                Toast.makeText(TasksActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+                galleryAddPic();
+            }
+        }else if (resultCode == RESULT_CANCELED) {
             Toast.makeText(this, "You cancelled the operation", Toast.LENGTH_SHORT).show();
         }
 
@@ -299,7 +299,7 @@ public class TasksActivity extends AppCompatActivity {
             StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
                     + "." + getFileExtension(mImageUri));
             Uri file = Uri.fromFile(new File(mImageFilePath));
-            mUploadTask = fileReference.putFile(file)
+            mUploadTask = fileReference.putFile(mImageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
