@@ -53,6 +53,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class TasksActivity extends AppCompatActivity {
 
@@ -77,8 +78,7 @@ public class TasksActivity extends AppCompatActivity {
 
     private StorageTask mUploadTask;
 
-    private List<Upload> mUploads;
-    private List<DatabaseReference> mDatabaseRefList;
+    private String mImageFilePath = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,8 +157,22 @@ public class TasksActivity extends AppCompatActivity {
 
     private void takePhotoFromCamera() {
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        ///////////////////////////////////////////
+        if (intent.resolveActivity(getPackageManager()) != null) {
 
-        startActivityForResult(intent, CAMERA_CODE);
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            Uri photoUri = FileProvider.getUriForFile(this, getPackageName() + ".provider", photoFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            //////////////////////////////////
+
+            startActivityForResult(intent, CAMERA_CODE);
+        }
 
 
         //Asking for user permission for writing external storage
@@ -231,13 +245,23 @@ public class TasksActivity extends AppCompatActivity {
 
         } else if (requestCode == CAMERA_CODE && resultCode == RESULT_OK) {
 
-            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-            mImageUri = getImageUri(getApplicationContext(), thumbnail);
-            Picasso.get().load(mImageUri).into(mImageViewTask);
+            mImageUri = Uri.parse(mImageFilePath);
+            System.out.println(mImageUri);
+            mImageViewTask.setImageURI(Uri.parse(mImageFilePath));
             Toast.makeText(TasksActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+            galleryAddPic();
+        } else if (resultCode == RESULT_CANCELED) {
+            Toast.makeText(this, "You cancelled the operation", Toast.LENGTH_SHORT).show();
         }
+
+//old code where only bitmap(low quality) image could be generated
+//            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+//            mImageUri = getImageUri(getApplicationContext(), thumbnail);
+//            Picasso.get().load(mImageUri).into(mImageViewTask);
+//            Toast.makeText(TasksActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
     }
 
+    //getting imageUri for old code
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         Bitmap OutImage = Bitmap.createScaledBitmap(inImage, 1000, 1000, true);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), OutImage, "Title", null);
@@ -251,12 +275,31 @@ public class TasksActivity extends AppCompatActivity {
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
+    private File createImageFile() throws IOException {
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "IMG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        mImageFilePath = image.getAbsolutePath();
+
+        return image;
+    }
+
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mImageFilePath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+    }
+
     private void uploadFile() {
         if (mImageUri != null) {
             StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
                     + "." + getFileExtension(mImageUri));
-
-            mUploadTask = fileReference.putFile(mImageUri)
+            Uri file = Uri.fromFile(new File(mImageFilePath));
+            mUploadTask = fileReference.putFile(file)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

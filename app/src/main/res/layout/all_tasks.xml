@@ -20,7 +20,7 @@
             android:layout_marginTop="0dp"
             android:gravity="center_vertical"
             android:hint="Title"
-            android:textSize="24sp"
+            android:textSize="30sp"
             android:layout_margin="1dp"
             android:background="@drawable/rectangular_border_background"/>
         <TextView
@@ -30,14 +30,14 @@
             android:gravity="center_vertical"
             android:layout_below="@+id/text_view_task_title"
             android:hint="Description"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:layout_margin="1dp"
             android:background="@drawable/rectangular_border_background"/>
 
         <ImageView
             android:id="@+id/image_view_uploaded_task"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="300dp"
             android:layout_margin="1dp"
             android:background="@drawable/rectangular_border_background"/>
 
