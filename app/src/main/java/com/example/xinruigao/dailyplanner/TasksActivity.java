@@ -106,7 +106,7 @@ public class TasksActivity extends AppCompatActivity {
 
         //individual date (child) database and storage ref package
         mDatabaseDateRef = mDatabaseRef.getRef().child(formattedDate);
-//        mStorageDateRef = mStorageRef.child(formattedDate);
+        mStorageDateRef = mStorageRef.child(formattedDate);
 
         mButtonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -296,7 +296,7 @@ public class TasksActivity extends AppCompatActivity {
 
     private void uploadFile() {
         if (mImageUri != null) {
-            StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
+            StorageReference fileReference = mStorageDateRef.child(System.currentTimeMillis()
                     + "." + getFileExtension(mImageUri));
             Uri file = Uri.fromFile(new File(mImageFilePath));
             mUploadTask = fileReference.putFile(mImageUri)
@@ -342,7 +342,7 @@ public class TasksActivity extends AppCompatActivity {
                         }
                     });
         } else {
-            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
         }
     }
 }
