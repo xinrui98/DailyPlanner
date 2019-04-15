@@ -83,7 +83,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TasksViewHol
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             menu.setHeaderTitle("Select Action");
-            MenuItem doWhatever = menu.add(Menu.NONE, 1, 1, "Do Whatever");
+            MenuItem doWhatever = menu.add(Menu.NONE, 1, 1, "Update");
             MenuItem delete = menu.add(Menu.NONE, 2, 2, "Delete");
 
             doWhatever.setOnMenuItemClickListener(this);
@@ -97,7 +97,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TasksViewHol
                 if (position != RecyclerView.NO_POSITION) {
                     switch (item.getItemId()) {
                         case 1:
-                            mListener.onWhateverClick(position);
+                            mListener.onUpdateClick(position);
                             return true;
                         case 2:
                             mListener.onDeleteClick(position);
@@ -113,7 +113,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TasksViewHol
     public interface OnItemClickListener {
         void onItemClick(int position);
 
-        void onWhateverClick(int position);
+        void onUpdateClick(int position);
 
         void onDeleteClick(int position);
     }

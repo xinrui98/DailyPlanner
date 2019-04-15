@@ -32,6 +32,7 @@ public class ShowAllDatesActivity extends AppCompatActivity implements DateAdapt
     private FirebaseStorage mStorage;
     private DatabaseReference mDatabaseRef;
     private StorageReference mStorageRef;
+
     private ValueEventListener mDBlistener;
 
     private List<String> mAllDates;
@@ -96,7 +97,6 @@ public class ShowAllDatesActivity extends AppCompatActivity implements DateAdapt
                     //.getKey shows the name of the package
                     String dateValue = postSnapshot.getKey();
                     mAllDates.add(dateValue);
-                    System.out.println("DATE EQUALS = :  " + dateValue);
                 }
                 mDateAdapter.notifyDataSetChanged();
 
@@ -131,7 +131,10 @@ public class ShowAllDatesActivity extends AppCompatActivity implements DateAdapt
         String selectedDate = mAllDates.get(position);
         String selectedKey = selectedDate;
         mDatabaseRef.child(selectedKey).removeValue();
-        Toast.makeText(this, mSelectedKeyDate + " deleted", Toast.LENGTH_SHORT).show();
+
+        Toast.makeText(this, selectedDate + " deleted", Toast.LENGTH_SHORT).show();
+
+
 
     }
 

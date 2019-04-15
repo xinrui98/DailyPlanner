@@ -12,6 +12,16 @@ public class Upload {
         //empty constructor
     }
 
+    public Upload(String title, String description) {
+        if (title.trim().equals("")) {
+            title = "No Title";
+        }if (description.trim().equals("")) {
+            description = "No Title";
+        }
+        mTitle = title;
+        mDescription = description;
+    }
+
     public Upload(String title, String description, String imageUrl) {
         if (title.trim().equals("")) {
             title = "No Title";
